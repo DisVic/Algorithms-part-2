@@ -2,9 +2,11 @@ package main
 
 import (
 	"fmt"
+
+	"golang.org/x/exp/constraints"
 )
 
-type Stack[T any] struct {
+type Stack[T constraints.Ordered] struct {
 	stack []T
 }
 
@@ -21,22 +23,25 @@ func (s *Stack[T]) pop() {
 }
 
 func (s *Stack[T]) get_max() T {
-	var max T
-	switch any(s.stack).(type) {
-	case T == string:
-		for i := 0; i < len(s.stack)-1; i++ {
-			if len(s.stack[i]) < len(s.stack[i+1]) {
-
-			}
+	if len(s.stack) == 0 {
+		fmt.Println("стэк пуст")
+		var zero T
+		return zero
+	}
+	max := s.stack[0]
+	for _, v := range s.stack {
+		if v > max {
+			max = v
 		}
 	}
-
+	return max
 }
 
 func main() {
-	stk := new(Stack[string])
-	stk.push("lol")
-	stk.push("pop")
+	stk := new(Stack[int])
+	stk.push(10)
+	stk.push(5)
+	fmt.Println(stk.get_max())
 	stk.pop()
 
 	fmt.Printf("%v ", stk.stack)
