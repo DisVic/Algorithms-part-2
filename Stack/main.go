@@ -6,11 +6,19 @@ import (
 	"golang.org/x/exp/constraints"
 )
 
-type Stack[T constraints.Ordered] struct {
+type Numeric interface {
+	constraints.Float | constraints.Integer
+}
+
+type Stack[T Numeric] struct {
+	max   T
 	stack []T
 }
 
 func (s *Stack[T]) push(input T) {
+	if input > s.max {
+		s.max = input
+	}
 	s.stack = append(s.stack, input)
 }
 
@@ -28,13 +36,7 @@ func (s *Stack[T]) get_max() T {
 		var zero T
 		return zero
 	}
-	max := s.stack[0]
-	for _, v := range s.stack {
-		if v > max {
-			max = v
-		}
-	}
-	return max
+	return s.max
 }
 
 func main() {
